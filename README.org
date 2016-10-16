@@ -1,13 +1,13 @@
 * Mendel
 Yet Another Programming Language Implementation
 ** Table of Contents
-- [[Philosophy][Philosophy]]
-- [[Quick Start][Quick Start]]
-- [[Building from Source][Building from Source]]
-- [[TODO List][TODO List]]
-- [[Contributing][Contributing]]
-- [[License][License]]
-** Philsophy
+- [[#philosophy][Philosophy]]
+- [[#quick-start][Quick Start]]
+- [[#building-from-source][Building from Source]]
+- [[#todo-list][TODO List]]
+- [[#contributing][Contributing]]
+- [[#license][License]]
+** Philosophy
 ** Quick Start
 ** Building from Source
 - [[https://github.com/hczhcz/libpepper][Libpepper]]
