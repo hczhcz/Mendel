@@ -4,16 +4,8 @@ Yet Another Programming Language Implementation
 
 ## Table of Contents
 
-* [Philosophy](#philosophy)
-* [Quick Start](#quick-start)
 * [Building from Source](#building-from-source)
 * [TODO List](#todo-list)
-* [Contributing](#contributing)
-* [License](#license)
-
-## Philosophy
-
-## Quick Start
 
 ## Building from Source
 
@@ -28,12 +20,13 @@ Yet Another Programming Language Implementation
 #### Specification
 
 * Lang Core
+* Syntax
 * Standard Library
 
 #### Front-end
 
 * Try PEG.js
-* libpepper
+* libpepper (pass 1)
 
 #### Back-end
 
@@ -65,12 +58,9 @@ Yet Another Programming Language Implementation
 #### Standard Library
 
 * Complete Implementation
+* Tests
 
 #### Miscellaneous
 
 * Applications?
 * Presentation?
-
-## Contributing
-
-## License
