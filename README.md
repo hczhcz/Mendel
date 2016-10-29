@@ -7,6 +7,10 @@ Yet Another Programming Language Implementation
 * [Building from Source](#building-from-source)
 * [TODO List](#todo-list)
 
+## Spec
+
+* [Spec.md](https://github.com/hczhcz/Mendel/blob/master/spec.md)
+
 ## Building from Source
 
 * [libpepper](https://github.com/hczhcz/libpepper)
