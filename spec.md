@@ -10,6 +10,7 @@
     'Char'
 
 ## Type
+    bool // int
     int
     float
     byte // int
@@ -19,13 +20,13 @@
 ## Decl
 ### Const
     const n = 0
-    const n int64 = 0
+    const n int = 0 // int as int64
     const a, b
     const a, b = 1, 2
 ### Var
 #### Standard
     var n = 0
-    var n int64 = 0
+    var n int = 0 // int as int64
     var a, b
     var a, b = 1, 2
 #### Short
