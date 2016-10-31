@@ -1,0 +1,56 @@
+* Standard Library
+** Built-in Functions
+- void print(string, ...)
+#+BEGIN_SRC javascript
+print("Hello World!\n");
+print(a + " + " + b + " = " + (a+b) + "\n");
+print("%d + %d = %d\n", a, b, a + b);
+#+END_SRC
+- bool read(Variable_Name)
+#+BEGIN_SRC javascript
+var a int = 0;
+read(a);
+var readSuccess bool = false;
+var b int = 0;
+readsuccess = read(b);
+#+END_SRC
+** Built-in Objects
+*** Array
+- Declaration
+#+BEGIN_SRC javascript
+var a array<int> = {1, 2, 3, 4, 5};
+#+END_SRC
+- Methods
+#+BEGIN_SRC javascript
+var length int = a.length();
+// length() return the length of the array
+a.insert(a.length, 6)
+// insert(index, element) return true if succeed, false if failed
+a.delete(0)
+// delete(index) return true if succeed, false if failed
+var index int = a.find(3) 
+// find(element) return the index of the fisrt occurrence of the element if found, -1 otherwise
+a[index]
+// return indexth element
+a[index] = 10;
+// assign indexth element and return
+#+END_SRC
+*** String
+- Declaration
+#+BEGIN_SRC javascript
+var str string = "Hello"
+#+END_SRC
+- Assignment
+#+BEGIN_SRC javascript
+str = "World";
+str[1] = 'a'; // str == "Warld";
+#+END_SRC
+- Methods
+#+BEGIN_SRC javascript
+var length int = str.length();
+// length() return the length of the string
+var index int = str.find('e'); 
+// find(element) return the index of the first occurrence of the element if found, -1 otherwise;
+#+END_SRC
+*** Tuple
+*** Map
