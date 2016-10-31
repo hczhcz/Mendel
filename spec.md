@@ -10,6 +10,7 @@
     'Char'
 
 ## Type
+    bool // int
     int
     float
     byte // int
