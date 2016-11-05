@@ -1,0 +1,38 @@
+* Lib
+** I/O
+*** Stream Interface
+*** Standard I/O
+*** File I/O
+** Buffer I/O
+** String
+*** String
+**** Search
+**** Replace
+*** RegEx
+** Containers
+*** Array
+*** Tuple
+*** Map
+** Math ...
+** Utilities
+*** Time
+* Language
+** Type Info
+*** Basic Types
+*** Array
+*** Closure
+*** Instance
+** Operators
+** Control Flow
+*** if-else_if-else
+*** while
+*** for
+*** for-each
+*** concurrency utilities
+** Error
+*** Error Information
+*** Error Handling
+** Compile Time Info
+*** AST
+*** Compile Time Control Flow
+*** Import / Export
