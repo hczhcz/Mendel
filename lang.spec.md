@@ -15,6 +15,24 @@
 
     'Char'
 
+### Int
+
+    1
+    12
+    123
+
+### Float
+
+    0.    // num after dot can be elided
+    0.1
+    .1    // num before dot can be elided
+    0.e1
+    0.1e1
+    1e10
+    1E10  // both e / E is acceptable
+    1e+10 // +
+    1e-10 // -
+
 ## Type
 
     bool // int
