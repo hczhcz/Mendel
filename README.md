@@ -4,7 +4,14 @@ Yet Another Programming Language Implementation
 
 ## Spec
 
-* [Spec.md](https://github.com/hczhcz/Mendel/blob/master/spec.md)
+### Naming & Syntax
+
+* [Specification](https://github.com/hczhcz/Mendel/blob/master/lang.spec.md)
+
+### Standard Library
+
+* [Module list](https://github.com/hczhcz/Mendel/blob/master/lib.modules.org)
+* [Specification](https://github.com/hczhcz/Mendel/blob/master/lib.spec.org)
 
 ## libpepper
 
