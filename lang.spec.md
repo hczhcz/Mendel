@@ -8,12 +8,21 @@
 
 ### String
 
+               | ""                     | ``
+:-------------:|:----------------------:|:----------:
+accepted char  | except '"' and newline | except '`'
+escaped        | Yes                    | No
+
     "String"
     `String`
+    "\n"  // newline
+    `
+    ` // newline
 
 ### Char
 
-    'Char'
+    'c'  // char c
+    '\n' // newline
 
 ### Int
 
