@@ -42,6 +42,9 @@ escaped        | Yes                    | No
     1e+10 // +
     1e-10 // -
 
+### Null
+
+
 ## Type
 
     bool // int
