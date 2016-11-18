@@ -1,0 +1,37 @@
+* Priority 01
+** Assignment:
+- number = 5;
+* Priortiy 02
+** Basic I/O
+- read(val);
+- write(val);
+** Basic Arithmetic:
+- a + b;
+- a - b;
+- a * b;
+- a / b; // floor division and division
+- a % b;
+** Logic Arithmetic:
+- a < b;
+- a > b;
+- a == b;
+- a <= b;
+- a >= b;
+- (a < b) && (x < y)
+- (a < b) || (x < y)
+- !(a < b)
+* Priority 03
+** Index Of
+*** String:
+- var ch char = str[0];
+- str[0] = 'H';
+*** Array
+- num1 = arr[0];
+- arr[0] = 15;
+
+
+
+
+
+
+
