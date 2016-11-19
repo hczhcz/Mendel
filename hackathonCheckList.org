@@ -1,0 +1,19 @@
+* CheckList
+- Tickets
+  - ID
+  - Passport
+- Laptop
+  - Laptop Charger
+  - Mouse
+  - Headset
+  - USB Drive
+- Notebook
+  - Pen
+- Cell Phone
+  - Cell Phone Charger
+- Foods
+  - Water
+  - Bottle
+- Clothes
+- Teethbrush
+- Towel
