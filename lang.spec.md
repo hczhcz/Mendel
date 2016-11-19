@@ -127,9 +127,9 @@ escaped        | Yes                    | No
 
 ### If
 
-    if (a < 1) {
+    if a < 1 {
         // bala
-    } else if (a < 2) {
+    } else if a < 2 {
         // balala
     } else {
         // balalala
@@ -137,21 +137,21 @@ escaped        | Yes                    | No
 
 ### Loop
 
-    for (i := 0; i < 10; i = i + 1) {
+    for i := 0; i < 10; i = i + 1 {
         // body
     }
-    while (n < 10) {
+    while n < 10 {
         // body
     }
 
 ### Break
 
-    while (n < 10) {
+    while n < 10 {
         break
     }
 
 ### Continue
 
-    while (n < 10) {
+    while n < 10 {
         continue
     }
