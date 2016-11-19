@@ -1,0 +1,8 @@
+var play array<int> = array<int>{1, 3, 5, 7, 9};
+var len int = play.length();
+
+for(i := 0; i < len; i = i + 1) {
+    var death array[i] = play[len-i];
+}
+
+console.log(play);
