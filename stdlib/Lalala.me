@@ -6,7 +6,7 @@ func bbst(array){
     while (i < len - 1) {
         while ( j < len) {
             if ( array[j] < array[i]) {
-                int x = array[j];
+                var x int = array[j];
                 array[j] = array[i];
                 array[i] = x;
                 }
