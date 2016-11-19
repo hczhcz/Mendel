@@ -18,7 +18,8 @@ readsuccess = read(b);
 *** Array
 - Declaration
 #+BEGIN_SRC javascript
-var a array<int> = {1, 2, 3, 4, 5};
+var a array<int> = array<int>{1, 2, 3, 4, 5};
+a := array<int>{1, 2, 3, 4, 5};
 #+END_SRC
 - Methods
 #+BEGIN_SRC javascript
