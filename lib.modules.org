@@ -1,18 +1,29 @@
 * Lib
 ** I/O
-*** Stream Interface
+*** Text Stream
+- !! read(var val)
+- !! write(const val)
+- readLine(out line string)
+- writeLine(const line string)
+*** Binary Stream
 *** Standard I/O
-- __read(var val)
-- __write(const var)
+- !! getChar(out c char)
+- !! putChar(const c char)
 *** File I/O
-** Buffer I/O
+- getChar(out c char)
+- putChar(const c char)
+*** Buffer I/O
+- getChar(out c char)
+- putChar(const c char)
 ** String
 *** String
-**** Search
-**** Replace
+- string() // TODO: remove native string and implement string as a class
+**** .search
+**** .replace
 *** RegEx
 ** Containers
 *** Array
+- array() // TODO: remove native array and implement array as a container (like stl vector)
 *** Tuple
 *** Map
 ** Math ...
@@ -20,6 +31,7 @@
 *** Time
 * Language
 ** Type Info
+- // TODO: all of them
 *** Basic Types
 *** Array
 *** Closure
@@ -31,18 +43,23 @@
 - __mutiple(const val1, const val2)
 - __divide(const val1, const val2)
 - __mod(const val1, const val2)
-- __lessThan(const val1, const val2)
-- __greaterThan(const val1, const val2)
-- __equalTo(const val1, const val2)
-- __lessThanOrEqualTo(const val1, const val2)
-- __greaterThanOrEqualTo(const val1, const val2)
+- __less(const val1, const val2)
+- __greater(const val1, const val2)
+- __equal(const val1, const val2)
+- __lessOrEqual(const val1, const val2)
+- __greaterOrEqual(const val1, const val2)
 - __and(const val1, const val2)
 - __or(const val1, const val2)
 - __not(const val)
-- __indexOf(const var1, const index);
+- __index(const var1, const index)
+** Control
+- __do(const ...)
+- __return(???)
 ** Control Flow
 *** if-else_if-else
+- __if(const cond func, const br1 func, const br2 func)
 *** while
+- __while(const cond func, const body func)
 *** for
 *** for-each
 *** concurrency utilities
