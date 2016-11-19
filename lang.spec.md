@@ -87,8 +87,8 @@ escaped        | Yes                    | No
     foo := func(a int, b int) (int, int) {
         return 0, 0
     }
-    func bar(int) {}
-    func bar(int, int) {}
+    func bar(a){}
+    func bar(a, b){}
     func bar(a int, b int, c ...int) {}
 
 ## Expr
