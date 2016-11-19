@@ -2,6 +2,8 @@
 ** I/O
 *** Stream Interface
 *** Standard I/O
+- __read(var val)
+- __write(const var)
 *** File I/O
 ** Buffer I/O
 ** String
@@ -23,6 +25,21 @@
 *** Closure
 *** Instance
 ** Operators
+- __assign(var val1, const val2)
+- __add(const val1, const val2)
+- __subtract(const val1, const val2)
+- __mutiple(const val1, const val2)
+- __divide(const val1, const val2)
+- __mod(const val1, const val2)
+- __lessThan(const val1, const val2)
+- __greaterThan(const val1, const val2)
+- __equalTo(const val1, const val2)
+- __lessThanOrEqualTo(const val1, const val2)
+- __greaterThanOrEqualTo(const val1, const val2)
+- __and(const val1, const val2)
+- __or(const val1, const val2)
+- __not(const val)
+- __indexOf(const var1, const index);
 ** Control Flow
 *** if-else_if-else
 *** while
