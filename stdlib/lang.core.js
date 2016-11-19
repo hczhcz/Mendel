@@ -86,4 +86,47 @@ module.exports = (boot) => {
             )
         )
     );
+
+    // __add('val1', 'val2')
+    boot.namedModule(
+        '__add', 'const', ast1.code(
+            ['val1', 'val2'], ['const', 'const'], '', ast1.meta(
+                (pass, instance) => {
+                    if (instance.accessOut('val1') === instance.accessOut('val2')
+                        && instance.accessOut('val1') === 'int') {
+                        instance.accessIn(
+                            '__return',
+                            instance.accessOut('val1')
+                        );
+                        return ast2.nativeOut(
+                            {
+                                js: (pass, target) => {
+                                    pass.write('__self.set(\'__return\', __self.get(\'val1\') + __self.get(\'val2\'))');
+                                }
+                            },
+                            typeInfo.basic('int')
+                        )
+                    }
+                    else if (instance.accessOut('val1') === instance.accessOut('val2')
+                        && instance.accessOut('val1') === 'float') {
+                        instance.accessIn(
+                            '__return',
+                            instance.accessOut('val1')
+                        );
+                        return ast2.nativeOut(
+                            {
+                                js: (pass, target) => {
+                                    pass.write('__self.set(\'__return\', __self.get(\'val1\') + __self.get(\'val2\'))');
+                                }
+                            },
+                            typeInfo.basic('float')
+                        )
+                    }
+                    else {
+                        throw Error();
+                    }
+                }
+            )
+        )
+    )
 };
