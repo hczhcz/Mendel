@@ -35,5 +35,5 @@ Execution plan
 a. advertising/ marketing
 b. plan & timelines
 
-8. Summarize and Thank you
+Summarize and Thank you
 ---
