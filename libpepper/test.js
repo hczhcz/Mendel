@@ -38,7 +38,8 @@ const a1 = ast1.call(ast1.lookup('__do'), [
     ]),
     // write(num)
     ast1.call(ast1.lookup('__write'), [
-      ast1.lookup('num')
+      ast1.lookup('num'
+    )
     ])
 ]);
 
