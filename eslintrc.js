@@ -16,6 +16,16 @@ module.exports = {
         'linebreak-style': ['error', 'unix'],
         'no-console': ['error', {'allow': ['log']}],
         'no-constant-condition': ['error', {'checkLoops': false}],
+        'no-mixed-operators': ['error', {
+            'groups': [
+                // ['+', '-', '*', '/', '%', '**'],
+                ['&', '|', '^', '~', '<<', '>>', '>>>'],
+                ['==', '!=', '===', '!==', '>', '>=', '<', '<='],
+                ['&&', '||'],
+                ['in', 'instanceof']
+            ],
+            'allowSamePrecedence': true
+        }],
         'no-unused-vars': ['error', {'args': 'none'}],
         'object-curly-newline': ['error', {'minProperties': 1}],
         'object-shorthand': ['error', 'never'],
@@ -39,5 +49,6 @@ module.exports = {
         'max-statements': 'off',
         'no-shadow': 'off',
         'no-warning-comments': 'off',
+        'prefer-reflect': 'off',
     },
 };
