@@ -1,9 +1,9 @@
 'use strict';
 
-const ast1 = require('../libpepper/ast.1')
-const ast2 = require('../libpepper/ast.2')
-const typeInfo = require('../libpepper/type.info')
-const typeCheck = require('../libpepper/type.check')
+const ast1 = require('./libpepper/ast.1')
+const ast2 = require('./libpepper/ast.2')
+const typeInfo = require('./libpepper/type.info')
+const typeCheck = require('./libpepper/type.check')
 
 module.exports = (boot) => {
     //  __do(...)
