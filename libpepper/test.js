@@ -1,12 +1,16 @@
 'use strict';
 
+const fs = require('fs');
+
 const typeinfo = require('./type.info');
+const type2c = require('./type.2.c');
 const ast1 = require('./ast.1');
 const ast2 = require('./ast.2');
 const boot1 = require('./boot.1');
-const boot2 = require('./boot.2.js');
+const boot2js = require('./boot.2.js');
+const boot2c = require('./boot.2.c');
 
-const a1 = ast1.call(ast1.lookup('__do'), [
+const ast = ast1.call(ast1.lookup('__do'), [
     // var a = 'hello';
     ast1.call(ast1.lookup('__assign'), [
         ast1.symbol('a', 'var'),
@@ -31,20 +35,11 @@ const a1 = ast1.call(ast1.lookup('__do'), [
     ast1.call(ast1.lookup('__write'), [
         ast1.lookup('a'),
     ]),
-    // var num = 10;
-    ast1.call(ast1.lookup('__assign'), [
-      ast1.symbol('num', 'var'),
-      ast1.literal(9 + 5, 'int')
-    ]),
-    // write(num)
-    ast1.call(ast1.lookup('__write'), [
-      ast1.lookup('num'
-    )
-    ])
 ]);
 
 const b1 = boot1();
-const b2 = boot2();
+const b2js = boot2js();
+const b2c = boot2c();
 
 b1.namedModule(
     '__do', 'const', ast1.code(
@@ -54,6 +49,9 @@ b1.namedModule(
                 return ast2.nativeOut(
                     {
                         js: (pass, target) => {
+                            // nothing
+                        },
+                        c: (pass, target) => {
                             // nothing
                         },
                     },
@@ -82,6 +80,13 @@ b1.namedModule(
                         js: (pass, target) => {
                             pass.write('__self.set(\'a\', __self.get(\'b\'))');
                         },
+                        c: (pass, target) => {
+                            pass.write(
+                                '((' + type2c.visit(instance)
+                                + ')__self)->data.a = ((' + type2c.visit(instance)
+                                + ')__self)->data.b'
+                            );
+                        },
                     },
                     typeinfo.basic('null')
                 );
@@ -103,6 +108,12 @@ b1.namedModule(
                         js: (pass, target) => {
                             pass.write('console.log(__self.get(\'a\'))');
                         },
+                        c: (pass, target) => {
+                            pass.write(
+                                '((' + type2c.visit(instance)
+                                + ')__self)->data.a'
+                            );
+                        },
                     },
                     typeinfo.basic('null')
                 );
@@ -114,26 +125,22 @@ b1.namedModule(
     )
 );
 
-try {
-    const head = '\'use strict\';\n'
-        + '\n'
-        + 'let __inner = null;\n'
-        + 'let __upper = null;\n'
-        + 'let __callee = null;\n'
-        + 'let __parent = null;\n'
-        + 'let __root = new Map();\n'
-        + 'let __self = __root;\n'
-        + '\n'
-        + '__root.set(\'__do\', __root);\n'
-        + '__root.set(\'__assign\', __root);\n'
-        + '__root.set(\'__write\', __root);\n'
-        + '\n';
+const instance = b1.module(ast);
 
-    const a2 = b1.module(a1);
+const m2js = b2js.module(instance);
+fs.writeFile(
+    'test_gen.js',
+    b2js.render() + m2js,
+    (err) => {
+        //
+    }
+);
 
-    const m2 = b2.module(a2);
-
-    console.log(head + b2.render() + m2);
-} catch (err) {
-    console.log(err.stack);
-}
+const m2c = b2c.module(instance);
+fs.writeFile(
+    'test_gen.c',
+    b2c.renderHead() + m2c.head + b2c.renderBody() + m2c.body,
+    (err) => {
+        //
+    }
+);
