@@ -463,4 +463,48 @@ module.exports = (boot) => {
             )
         )
     )
+
+    // __if('cond', 'body')
+    boot.namedModule(
+        '__if', 'const', ast1.code(
+            ['cond', 'body'], ['const', 'const'], '',
+            ast1.call(ast1.lookup('__do'), [
+                // const c = cond()
+                ast1.call(ast1.lookup('__assign'), [
+                    ast1.symbol('c', 'const'),
+                    ast1.call(ast1.lookup('cond'), [])
+                ]),
+                ast1.meta(
+                    (pass, instance) => {
+                        return ast2.nativeOut(
+                            {
+                                js: (pass, target) => {
+                                    pass.write('if (__self.get("c")) {');
+                                }
+                            }
+                        )
+                    },
+                    (pass, instance, type) => {
+                        throw Error();
+                    }
+                ),
+                // body()
+                ast1.call(ast1.lookup('body'), []),
+                ast1.meta(
+                    (pass, instance) => {
+                        return ast2.nativeOut(
+                            {
+                                js: (pass, target) => {
+                                    pass.write('}');
+                                }
+                            }
+                        )
+                    },
+                    (pass, instance, type) => {
+                        throw Error();
+                    }
+                ),
+            ])
+        )
+    )
 };
