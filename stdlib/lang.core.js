@@ -639,4 +639,25 @@ module.exports = (boot) => {
             ])
         )
     )
+
+    // exit('val')
+    boot.namedModule(
+        'exit', 'const', ast1.code(
+            ['val'], 'const', '', ast1.meta(
+                (pass, instance) => {
+                    return ast2.nativeOut(
+                        {
+                            js: (pass, target) => {
+                                pass.write('__self.__caller.__func = null');
+                                pass.write('__self.__caller.__caller.__func()');
+                            }
+                        }
+                    )
+                },
+                (pass, instance, type) => {
+                    throw Error();
+                }
+            )
+        )
+    )
 };
