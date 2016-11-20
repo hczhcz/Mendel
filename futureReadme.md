@@ -16,8 +16,6 @@ Get to know about the Mendel by visiting our [presentation](http://go.osu.edu/in
 
 Currently, the Mendel is complied using node.js. Node.js can be downloaded on [Node.js](https://nodejs.org).
 
-PEG.js
-
 For Windows user, it might be helpful to have an terminal like [PuTTy](http://www.putty.org/) on your computer.
 
 ### Sources
@@ -28,35 +26,33 @@ To download the sources for the Mendel, open a terminal and  type in following c
 $ git clone https://github.com/hczhcz/mendel-lang.git
 ```
 
-## Testing
+## Turorial
 
 ### HelloWorld
 
 Let's generate your first Mendel code. 
 
-Open the file locates at /sample/helloworld.js
+Open the file locates at /sample/helloworld.me
 
-```
-
+```javascript
+write("Hello, World!");
 ```
 
 ### Fibonacci number
 
-Open the file locates at /sample/fibonacci.js
+Open the file locates at /sample/fibonacci.me
 
 ```
 
 ```
 
 ## Features
+- Support UTF-8
+- Compile to JavaScript/C
 - Number assignment 
 - Basic input/output
 - Basic arithmetic
 - Logic arithmetic
-- Support UTF-8
-- JavaScript/C friendly
-
-## Usages
 
 ## Contributing
 
