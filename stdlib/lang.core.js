@@ -191,9 +191,9 @@ module.exports = (boot) => {
         )
     )
 
-    //__multiple(const val1, const val2)
+    //__multiply(const val1, const val2)
     boot.namedModule(
-        '__multiple', 'const', ast1.code(
+        '__multiply', 'const', ast1.code(
             ['val1', 'val2'], ['const', 'const'], '', ast1.meta(
                 (pass, instance) => {
                     let type1 = instance.accessOut('val1');
@@ -311,6 +311,46 @@ module.exports = (boot) => {
         )
     )
 
+    // __lessEqual('val1', 'val2')
+    boot.namedModule(
+        '__lessEqual', 'const', ast1.code(
+            ['val1', 'val2'], ['const', 'const'], '', ast1.meta(
+                (pass, instance) => {
+                    let type1 = instance.accessOut('val1');
+                    let type2 = instance.accessOut('val2');
+                    if (typeCheck.visit(type1, type2) &&
+                        typeCheck.visit(type1, typeInfo.basic('int'))) {
+                        return ast2.nativeOut(
+                            {
+                                js: (pass, target) => {
+                                    pass.write(target('__self.get(\'val1\') <= __self.get(\'val2\')'));
+                                }
+                            },
+                            typeInfo.basic('boolean')
+                        )
+                    }
+                    else if (typeCheck.visit(type1, type2) &&
+                             typeCheck.visit(type1, typeInfo.basic('float'))) {
+                        return ast2.nativeOut(
+                            {
+                                js: (pass, target) => {
+                                    pass.write(target('__self.get(\'val1\') <= __self.get(\'val2\')'));
+                                }
+                            },
+                            typeInfo.basic('boolean')
+                        )
+                    }
+                    else {
+                        throw Error();
+                    }
+                },
+                (pass, instance, type) => {
+                    throw Error();
+                }
+            )
+        )
+    )
+
     // __greater('val1', 'val2')
     boot.namedModule(
         '__greater', 'const', ast1.code(
@@ -335,6 +375,46 @@ module.exports = (boot) => {
                             {
                                 js: (pass, target) => {
                                     pass.write(target('__self.get(\'val1\') > __self.get(\'val2\')'));
+                                }
+                            },
+                            typeInfo.basic('boolean')
+                        )
+                    }
+                    else {
+                        throw Error();
+                    }
+                },
+                (pass, instance, type) => {
+                    throw Error();
+                }
+            )
+        )
+    )
+
+    // __greaterEqual('val1', 'val2')
+    boot.namedModule(
+        '__greaterEqual', 'const', ast1.code(
+            ['val1', 'val2'], ['const', 'const'], '', ast1.meta(
+                (pass, instance) => {
+                    let type1 = instance.accessOut('val1');
+                    let type2 = instance.accessOut('val2');
+                    if (typeCheck.visit(type1, type2) &&
+                        typeCheck.visit(type1, typeInfo.basic('int'))) {
+                        return ast2.nativeOut(
+                            {
+                                js: (pass, target) => {
+                                    pass.write(target('__self.get(\'val1\') >= __self.get(\'val2\')'));
+                                }
+                            },
+                            typeInfo.basic('boolean')
+                        )
+                    }
+                    else if (typeCheck.visit(type1, type2) &&
+                             typeCheck.visit(type1, typeInfo.basic('float'))) {
+                        return ast2.nativeOut(
+                            {
+                                js: (pass, target) => {
+                                    pass.write(target('__self.get(\'val1\') >= __self.get(\'val2\')'));
                                 }
                             },
                             typeInfo.basic('boolean')
@@ -461,6 +541,50 @@ module.exports = (boot) => {
                     }
                 }
             )
+        )
+    )
+
+    // __if('cond', 'body')
+    boot.namedModule(
+        '__if', 'const', ast1.code(
+            ['cond', 'body'], ['const', 'const'], '',
+            ast1.call(ast1.lookup('__do'), [
+                // const c = cond()
+                ast1.call(ast1.lookup('__assign'), [
+                    ast1.symbol('c', 'const'),
+                    ast1.call(ast1.lookup('cond'), [])
+                ]),
+                ast1.meta(
+                    (pass, instance) => {
+                        return ast2.nativeOut(
+                            {
+                                js: (pass, target) => {
+                                    pass.write('if (__self.get("c")) {');
+                                }
+                            }
+                        )
+                    },
+                    (pass, instance, type) => {
+                        throw Error();
+                    }
+                ),
+                // body()
+                ast1.call(ast1.lookup('body'), []),
+                ast1.meta(
+                    (pass, instance) => {
+                        return ast2.nativeOut(
+                            {
+                                js: (pass, target) => {
+                                    pass.write('}');
+                                }
+                            }
+                        )
+                    },
+                    (pass, instance, type) => {
+                        throw Error();
+                    }
+                ),
+            ])
         )
     )
 };
