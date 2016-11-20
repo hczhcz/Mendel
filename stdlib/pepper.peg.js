@@ -273,7 +273,9 @@ function peg$parse(input, options) {
       },
       peg$c53 = "return",
       peg$c54 = peg$literalExpectation("return", false),
-      peg$c55 = function(e) {return {"return":e}},
+      peg$c55 = function(e) {
+          return ast1.call(ast1.lookup("__exit"), []);
+      },
       peg$c56 = "continue",
       peg$c57 = peg$literalExpectation("continue", false),
       peg$c58 = function() {return {"continue":null}},
@@ -4258,7 +4260,7 @@ function peg$parse(input, options) {
 
 
 
-  const ast1 = require("../libpepper/ast.1");
+  const ast1 = require("./libpepper/ast.1");
 
   var getBiOpFunc = (op) => {
       let funcName;
