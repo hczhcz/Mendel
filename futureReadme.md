@@ -69,7 +69,20 @@ Output:
 3.5
 ```
 
-###
+### Prototype-based OOP
+
+```javascript
+func newUser(name, id) {
+    return __self;
+}
+user := newUser("Foo", 42);
+write(user);
+```
+
+Output:
+```
+{"name": "Foo", "id": 42}
+```
 
 ## Features
 - Template and generic driven
