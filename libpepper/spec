@@ -20,15 +20,16 @@ types:
         closure
             parent -> instance
             code -> code
-            private instances -> array of instance
+            instances -> array of instance
             add -> function
         instance
-            id -> i64
             inits -> array of string
+            mainMode -> string (symbol modes 'const' or 'out')
             modes -> object
-                (string) -> string (in symbol modes)
-            private types -> object
+                (string) -> string (symbol modes 'const', 'out', or 'var')
+            types -> object
                 (string) -> type info
+            id -> i64
             impl -> pass-2 ast node
             addInit -> function
             add -> function
@@ -54,7 +55,7 @@ types:
         code
             paramNames -> array of string
             paramModes -> array of string (in symbol modes)
-            vaMode -> string (in symbol modes or '')
+            vaMode -> string (in symbol modes, or '')
             impl -> pass-1 ast node
         meta
             outGen -> function
@@ -69,6 +70,7 @@ types:
             type -> type info
         reservedIn
             name -> string
+            type -> type info
         pathOut
             upper -> pass-2 ast node
             name -> string
@@ -76,6 +78,7 @@ types:
         pathIn
             upper -> pass-2 ast node
             name -> string
+            type -> type info
         callOut
             callee -> pass-2 ast node
             instance -> instance
@@ -91,6 +94,7 @@ types:
                 (i64) -> pass-2 ast node
             inArgs -> object
                 (i64) -> pass-2 ast node
+            type -> type info
         nativeOut
             impls -> object
                 (string) -> function
@@ -98,9 +102,10 @@ types:
         nativeIn
             impls -> object
                 (string) -> function
+            type -> type info
 
 symbol modes:
-    const, out, var, special
+    const, out, var, dep, ret
 
 reserved names:
     internal names:

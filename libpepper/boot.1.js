@@ -5,14 +5,20 @@ const ast1 = require('./ast.1');
 const pass1 = require('./pass.1');
 
 module.exports = () => {
-    const pass = pass1(typeinfo.instance());
+    const pass = pass1(typeinfo.instance('out'));
+
+    pass.instances[0].id = 0;
 
     const boot = {
         module: (ast) => {
             // TODO: env info as arguments?
             // TODO: return value as export (module.exports = __return)
 
-            return pass.visitOut(
+            const instance = typeinfo.instance('out'); // a virtual instance 0
+
+            instance.id = 0;
+
+            instance.impl = pass.visitOut(
                 pass.instances[0], ast1.call(
                     ast1.code(
                         [], [], '',
@@ -21,17 +27,19 @@ module.exports = () => {
                     []
                 )
             );
+
+            return instance;
         },
 
         namedModule: (name, mode, ast) => {
-            const code = boot.module(ast);
+            const instance = boot.module(ast);
 
             pass.instances[0].addInit(
                 name, mode,
-                code.type
+                instance.impl.type
             );
 
-            return code;
+            return instance;
         },
     };
 
