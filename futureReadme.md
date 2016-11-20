@@ -14,14 +14,14 @@ Mendel is a static typed programming language although it was developed based on
 
 Currently, the Mendel is complied using node.js. Node.js can be downloaded on [Node.js](https://nodejs.org).
 
-For Windows user, it might be helpful to have software like PuTTy on your computer.
+For Windows user, it might be helpful to have an terminal like [PuTTy](http://www.putty.org/) on your computer.
 
 ### Sources
 
 To download the sources for the Mendel, open a terminal and  type in following command.
 
 ```bash
-git clone <url>
+$ git clone <url>
 ```
 
 ## Testing
@@ -30,9 +30,37 @@ git clone <url>
 
 Let's generate your first Mendel code. 
 
+Open the file locates at /sample/helloworld.js
+
 ```
 
 ```
+
+### Fibonacci number
+
+Open the file locates at /sample/fibonacci.js
+
+```
+
+```
+
+## Features
+- Number assignment 
+- Basic input/output
+- Basic arithmetic
+- Logic arithmetic
+- Support UTF-8
+- JavaScript/C friendly
+
+## Usages
+
+## Contributing
+
+Contributing to the Mendel is always welcome. 
+
+Please make sure your code is passed before  you submit a pull request.
+
+If you have any question, fell free to contact the Mendel development group.
 
 ## License
 
