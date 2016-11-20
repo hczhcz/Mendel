@@ -151,25 +151,76 @@ module.exports = (boot) => {
         )
     )
 
-    // // __index('container', 'index')
-    // boot.namedModule(
-    //     '__index', 'const', ast1.code(
-    //         ['container', 'index'], ['const', 'const'], '', ast1.meta(
-    //             (pass, instance) => {
-    //                 if (typeCheck.visit(instance.accessOut('container'))
-    //                     === typeInfo.basic('array')) {
-    //                         return ast2.nativeOut(
-    //                             {
-    //                                 js: (pass, target) => {
-    //                                     pass.write(
-    //                                         target('__self.get(\'container\''
-    //                                         + '[' + '__self.get(\'index\')' + '])'));
-    //                                 }
-    //                             }
-    //                         )
-    //                 }
-    //             }
-    //         )
-    //     )
-    // )
+    // __array(...)
+    boot.namedModule(
+        '__array', 'const', ast1.code(
+            [], [], 'const', ast1.meta(
+                (pass, instance) => {
+                    return ast2.nativeOut(
+                        {
+                            js: (pass, target) => {
+                                var output = "[";
+                                for(var i = 0; instance.types['__argument_'+i]; i++) {
+                                    output += "__self.get('__argument_" + i + "'),";
+                                }
+                                output += "]";
+                                pass.write(target(output));
+                            }
+                        },
+                        typeInfo.array(typeInfo.basic('int'))
+                    )
+                },
+                (pass, instance, type) => {
+                    throw Error();
+                }
+            )
+        )
+    )
+
+    // __index('container', 'index')
+    boot.namedModule(
+        '__index', 'const', ast1.code(
+            ['container', 'index'], ['const', 'const'], '', ast1.meta(
+                (pass, instance) => {
+                    if (typeCheck.visit(instance.accessOut('container'),
+                        typeInfo.array(typeInfo.basic('int')))) {
+                            return ast2.nativeOut(
+                                {
+                                    js: (pass, target) => {
+                                        pass.write(target(
+                                            "__self.get('container')"
+                                            + "[__self.get('index')]"
+                                        ));
+                                    }
+                                },
+                                typeInfo.basic('int')
+                            )
+                    }
+                    else {
+                        throw Error();
+                    }
+                },
+                (pass, instance, type) => {
+                    if (typeCheck.visit(instance.accessOut('container'),
+                        typeInfo.array(typeInfo.basic('int')))
+                        && typeCheck.visit(instance.accessOut('container').type, type)) {
+                            return ast2.nativeIn(
+                                {
+                                    js: (pass, value) => {
+                                        pass.write(
+                                            "__self.get('container')"
+                                            + "[__self.get('index')] = " + value
+                                        );
+                                    }
+                                },
+                                typeInfo.basic('null')
+                            )
+                    }
+                    else {
+                        throw Error();
+                    }
+                }
+            )
+        )
+    )
 };
