@@ -512,6 +512,28 @@ module.exports = (boot) => {
             )
         )
     )
+
+    // __not('val')
+    boot.namedModule(
+        '__not', 'const', ast1.code(
+            ['val'], ['const'], '', ast1.meta(
+                (pass, instance) => {
+                    return ast2.nativeOut(
+                        {
+                            js: (pass, target) => {
+                                pass.write(target('!__self.get(\'val\')'));
+                            }
+                        },
+                        instance.accessOut('val')
+                    )
+                },
+                (pass, instance, type) => {
+                    throw Error();
+                }
+            )
+        )
+    )
+
     // __array(...)
     boot.namedModule(
         '__array', 'const', ast1.code(
