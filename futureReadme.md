@@ -11,7 +11,9 @@ For Windows user, it might be helpful to have software like PuTTy on your comput
 
 ###Sources
 To download the sources for the Mendel, open a terminal and  type in following command.
-<TTYs go here>
+```bash
+git clone amaogou
+```
 
 ##Testing
 ###HelloWorld
