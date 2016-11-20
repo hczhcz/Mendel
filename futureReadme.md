@@ -2,9 +2,7 @@
 
 # Mendel Programming Language
 
-## Welcome to Mendel!
-
-Mendel is an user friendly programming language. It has a clean design with modern programming principles. 
+Mendel is an user friendly programming language. It has a clean design with modern programming principles.
 
 Mendel is a static typed programming language although it was developed based on JavaScript. Mendel is also friendly to JavaScript and C.
 
@@ -12,15 +10,15 @@ Get to know about the Mendel by visiting our [presentation](http://go.osu.edu/in
 
 ## Getting  Started
 
-### System Requirements
+### Requirements
 
 Currently, the Mendel is complied using node.js. Node.js can be downloaded on [Node.js](https://nodejs.org).
 
 For Windows user, it might be helpful to have an terminal like [PuTTy](http://www.putty.org/) on your computer.
 
-### Sources
+### Source
 
-To download the sources for the Mendel, open a terminal and  type in following command.
+To download the source of the Mendel, open a terminal and type in the following command:
 
 ```bash
 $ git clone https://github.com/hczhcz/mendel-lang.git
@@ -30,38 +28,64 @@ $ git clone https://github.com/hczhcz/mendel-lang.git
 
 ### HelloWorld
 
-Let's generate your first Mendel code. 
-
-Open the file locates at /sample/helloworld.me
+Your first Mendel code:
 
 ```javascript
 write("Hello, World!");
 ```
 
-### Fibonacci number
-
-Open the file locates at /sample/fibonacci.me
-
+Output:
+```
+Hello, World!
 ```
 
+### Assignment
+
+```javasrcipt
+a := 1;
+b := 2;
+write(a+b);
 ```
+
+Output:
+
+```
+3
+```
+
+### Generic
+
+```javascript
+func add(a, b) {
+    return a + b;
+}
+write( add(1+2) );
+write( add(1.2+2.3) );
+```
+
+Output:
+```
+3
+3.5
+```
+
+###
 
 ## Features
+- Template and generic driven
+- Prototype-based OOP
+- Multi-paradigm
+- Static & strong type
+- Full type inference
 - Support UTF-8
-- Compile to JavaScript/C
-- Number assignment 
-- Basic input/output
-- Basic arithmetic
-- Logic arithmetic
+- Compiled to JavaScript and C
 
 ## Contributing
 
-Contributing to the Mendel is always welcome. 
-
-Please make sure your code is passed before  you submit a pull request.
+Contributing to the Mendel is always welcome.
 
 If you have any question, feel free to contact the Mendel development group.
 
 ## License
 
-The Mendel, including complier and standard library, is under XXX License, expect some of project files suggest otherwise.
+The Mendel, including complier and standard library, is under MIT License, expect some of project files suggest otherwise.
