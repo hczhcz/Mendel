@@ -42,7 +42,9 @@ module.exports = (root) => {
                 ast2.reservedOut(
                     '__self',
                     instance
-                ), ast.name
+                ),
+                ast.name,
+                type
             );
         },
 
@@ -50,7 +52,7 @@ module.exports = (root) => {
             switch (ast.name) {
                 case '__root':
                 case '__self': {
-                    return makeReserved(ast.name);
+                    return makeReserved();
                 }
                 default: {
                     let upper = ast2.reservedOut(
@@ -79,10 +81,10 @@ module.exports = (root) => {
                         upper.type.accessOut(ast.name)
                     );
                 },
-                (name) => {
+                () => {
                     return ast2.reservedOut(
-                        name,
-                        instance
+                        ast.name,
+                        upper.type.accessOut(ast.name)
                     );
                 }
             );
@@ -98,11 +100,20 @@ module.exports = (root) => {
                     );
 
                     return ast2.pathIn(
-                        upper, ast.name
+                        upper, ast.name,
+                        type
                     );
                 },
-                (name) => {
-                    return ast2.reservedIn(name);
+                () => {
+                    instance.accessIn(
+                        ast.name,
+                        type
+                    );
+
+                    return ast2.reservedIn(
+                        ast.name,
+                        type
+                    );
                 }
             );
         },
@@ -129,11 +140,12 @@ module.exports = (root) => {
             );
 
             return ast2.pathIn(
-                upper, ast.name
+                upper, ast.name,
+                type
             );
         },
 
-        call: (instance, ast, before, builder, after, makeCall) => {
+        call: (instance, ast, mainMode, before, builder, after, makeCall) => {
             const callee = pass.visitOut(
                 instance, ast.callee
             );
@@ -155,20 +167,21 @@ module.exports = (root) => {
             }
 
             // notice: .length change only when a new instance is built
-            let child = typeinfo.instance();
+            let child = typeinfo.instance(mainMode);
 
+            // notice: __root and __self are not actual members
             child.addInit(
-                '__root', 'special',
+                '__root', 'const',
                 pass.instances[0]
             );
             child.addInit(
-                '__self', 'special',
+                '__self', 'var',
                 child
             );
             child.addInit(
                 '__parent', 'var',
                 instance
-            ); // TODO: mode?
+            );
 
             before(child);
 
@@ -179,6 +192,17 @@ module.exports = (root) => {
                     || '__argument_' + i;
                 const mode = closure.code.paramModes[i]
                     || closure.code.vaMode;
+
+                if (mode === 'dep') {
+                    if (child.mainMode === 'const') {
+                        mode = 'out';
+                    } else {
+                        // mainMode === 'out'
+                        mode = 'const';
+                    }
+                } else if (mode === 'ret') {
+                    mode = child.mainMode;
+                }
 
                 if (mode === 'const' || mode === 'var') {
                     outArgs[name] = pass.visitOut(
@@ -226,7 +250,7 @@ module.exports = (root) => {
             let resultType = null;
 
             return pass.call(
-                instance, ast,
+                instance, ast, 'out',
                 (child) => {
                     child.add(
                         '__return', 'out'
@@ -260,7 +284,7 @@ module.exports = (root) => {
 
         callIn: (instance, ast, type) => {
             return pass.call(
-                instance, ast,
+                instance, ast, 'const',
                 (child) => {
                     child.addInit(
                         '__return', 'const',
@@ -282,7 +306,8 @@ module.exports = (root) => {
                 (callee, child, outArgs, inArgs) => {
                     return ast2.callIn(
                         callee, child,
-                        outArgs, inArgs
+                        outArgs, inArgs,
+                        type
                     );
                 }
             );

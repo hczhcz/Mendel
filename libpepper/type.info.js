@@ -22,7 +22,7 @@ module.exports = {
             __type: 'closure',
             parent: parent,
             code: code,
-            instances: [], // private
+            instances: [],
 
             add: (instance, builder) => {
                 // find exist instance
@@ -66,12 +66,13 @@ module.exports = {
         return closure;
     },
 
-    instance: () => {
+    instance: (mainMode) => {
         const instance = {
             __type: 'instance',
             inits: [],
+            mainMode: mainMode,
             modes: {},
-            types: {}, // private
+            types: {}, // edit by member functions
             id: null, // int, set by pass 1
             impl: null, // ast2, set by pass 1
 
@@ -89,6 +90,17 @@ module.exports = {
             add: (name, mode) => {
                 if (instance.modes[name]) {
                     throw Error();
+                }
+
+                if (mode === 'dep') {
+                    if (instance.mainMode === 'const') {
+                        mode = 'out';
+                    } else {
+                        // mainMode === 'out'
+                        mode = 'const';
+                    }
+                } else if (mode === 'ret') {
+                    mode = instance.mainMode;
                 }
 
                 instance.modes[name] = mode;

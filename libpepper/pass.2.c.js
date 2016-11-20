@@ -1,13 +1,25 @@
 'use strict';
 
+const type2c = require('./type.2.c');
+
 module.exports = () => {
     const pass = {
-        code: [],
+        codeHead: [],
+        codeBody: [],
         id: [], // stack
-        buffer: [], // stack
+        bufferHead: [], // stack
+        bufferBody: [], // stack
+
+        writeHeadRaw: (line) => {
+            pass.bufferHead[pass.bufferHead.length - 1].push(line + '\n');
+        },
+
+        writeHead: (line) => {
+            pass.writeHeadRaw('    ' + line + ';');
+        },
 
         writeRaw: (line) => {
-            pass.buffer[pass.buffer.length - 1].push(line + '\n');
+            pass.bufferBody[pass.bufferBody.length - 1].push(line + '\n');
         },
 
         write: (line) => {
@@ -16,15 +28,29 @@ module.exports = () => {
 
         literalOut: (ast, target) => {
             switch (ast.type.type) {
-                case 'boolean':
+                case 'boolean': {
+                    //
+
+                    break;
+                }
                 case 'int':
                 case 'i8':
                 case 'i16':
                 case 'i32':
+                case 'i64': {
+                    pass.write(target(ast.value.toString() + 'll'));
+
+                    break;
+                }
                 case 'unsigned':
                 case 'u8':
                 case 'u16':
                 case 'u32':
+                case 'u64': {
+                    pass.write(target(ast.value.toString() + 'ull'));
+
+                    break;
+                }
                 case 'float':
                 case 'f32':
                 case 'f64': {
@@ -36,10 +62,6 @@ module.exports = () => {
                     pass.write(target(JSON.stringify(ast.value)));
 
                     break;
-                }
-                case 'i64':
-                case 'u64': {
-                    throw Error();
                 }
                 default: {
                     throw Error(); // never reach
@@ -64,9 +86,8 @@ module.exports = () => {
             );
 
             pass.write(target(
-                '__upper.get('
-                + '\'' + ast.name + '\''
-                + ')'
+                '((' + type2c.visit(ast.upper.type)
+                + ') __upper)->data.' + ast.name
             ));
         },
 
@@ -79,9 +100,8 @@ module.exports = () => {
             );
 
             pass.write(
-                '__upper.set('
-                + '\'' + ast.name + '\', ' + value
-                + ')'
+                '((' + type2c.visit(ast.upper.type)
+                + ') __upper)->data.' + ast.name + ' = ' + value
             );
         },
 
@@ -94,58 +114,62 @@ module.exports = () => {
             );
 
             const calleeId = 'func_' + ast.instance.id;
+            const frameId = 'struct frame_' + ast.instance.id;
 
-            pass.write('__inner = new Map()');
-            pass.write('__inner.__func = ' + calleeId);
-            pass.write('__inner.set(\'__parent\', __upper)');
+            pass.write(
+                '__inner = (struct head *) malloc(sizeof(' + frameId + '))'
+            );
+            pass.write('__inner->__func = ' + calleeId);
+            pass.write(
+                '((' + type2c.visit(ast.instance)
+                + ') __inner)->data.__parent = __upper'
+            );
 
             before();
 
-            pass.write('__inner.__outer = __callee');
+            pass.write('__inner->__outer = __callee');
             pass.write('__callee = __inner');
 
             for (const i in ast.outArgs) {
                 pass.visitOut(
                     ast.outArgs[i],
                     (value) => {
-                        return '__callee.set('
-                            + '\'' + i + '\', ' + value
-                            + ')';
+                        return '((' + type2c.visit(ast.instance)
+                            + ') __callee)->data.' + i + ' = ' + value;
                     }
                 );
             }
 
-            pass.write('__callee.__caller = __self');
+            pass.write('__callee->__caller = __self');
             pass.write('__self = __callee');
 
             // lazy codegen
-            if (!pass.code[ast.instance.id]) {
+            if (!pass.codeBody[ast.instance.id]) { // TODO: ?
                 pass.build(ast.instance, builder);
             }
 
             // call
             pass.continuation(
                 (returnId) => {
-                    pass.write('__callee.__caller.__func = ' + returnId);
-                    pass.write('__callee.__func()');
+                    pass.write('__callee->__caller->__func = ' + returnId);
+                    pass.write('__callee->__func()');
                 },
                 (returnId) => {
                     pass.write('__callee = __self');
-                    pass.write('__self = __callee.__caller');
+                    pass.write('__self = __callee->__caller');
                 }
             );
 
             for (const i in ast.inArgs) {
                 pass.visitIn(
                     ast.inArgs[i],
-                    '__callee.get('
-                    + '\'' + i + '\''
-                    + ')'
+                    '((' + type2c.visit(ast.instance)
+                    + ') __callee)->data.' + i
                 );
             }
 
             pass.write('__inner = __callee');
-            pass.write('__callee = __inner.__outer');
+            pass.write('__callee = __inner->__outer');
 
             after();
         },
@@ -160,12 +184,16 @@ module.exports = () => {
                     pass.visitOut(
                         ast,
                         (value) => {
-                            return '__self.set(\'__return\', ' + value + ')';
+                            return '((' + type2c.visit(ast.instance)
+                                + ') __self)->data.__return = ' + value;
                         }
                     );
                 },
                 () => {
-                    pass.write(target('__inner.get(\'__return\')'));
+                    pass.write(target(
+                        '((' + type2c.visit(ast.instance)
+                        + ') __inner)->data.__return'
+                    ));
                 }
             );
         },
@@ -174,12 +202,16 @@ module.exports = () => {
             pass.call(
                 ast,
                 () => {
-                    pass.write('__inner.set(\'__return\', ' + value + ')');
+                    pass.write(
+                        '((' + type2c.visit(ast.instance)
+                        + ') __inner)->data.__return = ' + value
+                    );
                 },
                 (ast) => {
                     pass.visitIn(
                         ast,
-                        '__self.get(\'__return\')'
+                        '((' + type2c.visit(ast.instance)
+                        + ') __self)->data.__return'
                     );
                 },
                 () => {
@@ -189,16 +221,16 @@ module.exports = () => {
         },
 
         nativeOut: (ast, target) => {
-            if (ast.impls.js) {
-                ast.impls.js(pass, target);
+            if (ast.impls.c) {
+                ast.impls.c(pass, target);
             } else {
                 throw Error();
             }
         },
 
         nativeIn: (ast, value) => {
-            if (ast.impls.js) {
-                ast.impls.js(pass, value);
+            if (ast.impls.c) {
+                ast.impls.c(pass, value);
             } else {
                 throw Error();
             }
@@ -220,40 +252,61 @@ module.exports = () => {
 
         continuation: (before, after) => {
             const returnId = pass.id[pass.id.length - 1]
-                + '_' + pass.buffer[pass.buffer.length - 1].length;
+                + '_' + pass.bufferBody[pass.bufferBody.length - 1].length;
 
             before(returnId);
 
             pass.writeRaw('};');
             pass.writeRaw('');
-            pass.writeRaw('const ' + returnId + ' = () => {');
+            pass.writeHeadRaw('void ' + returnId + '();');
+            pass.writeRaw('void ' + returnId + '() {');
 
             after(returnId);
         },
 
         build: (instance, builder) => {
             const funcId = 'func_' + instance.id;
+            const frameId = 'struct frame_' + instance.id;
+            const dataId = 'struct data_' + instance.id;
 
             pass.id.push(funcId);
 
-            pass.buffer.push([]);
+            pass.bufferHead.push([]);
+            pass.bufferBody.push([]);
 
-            pass.writeRaw('const ' + funcId + ' = () => {');
+            pass.writeHeadRaw(dataId + ' {');
+            for (const i in instance.types) {
+                pass.writeHead(type2c.visit(instance.types[i]) + ' ' + i);
+            }
+            pass.writeHeadRaw('};');
+            pass.writeHeadRaw('');
+
+            pass.writeHeadRaw(frameId + ' {');
+            pass.writeHead('struct head head');
+            pass.writeHead(dataId + ' data');
+            pass.writeHeadRaw('};');
+            pass.writeHeadRaw('');
+
+            pass.writeHeadRaw('void ' + funcId + '();');
+            pass.writeRaw('void ' + funcId + '() {');
 
             builder(instance.impl);
 
+            pass.writeHeadRaw('');
+
             // return
-            pass.write('__self.__func = null');
+            pass.write('__self->__func = NULL');
             if (instance.id !== 0) {
-                pass.write('__self.__caller.__func()');
+                pass.write('__self->__caller->__func()');
             }
 
-            pass.writeRaw('};');
+            pass.writeRaw('}');
             pass.writeRaw('');
 
             pass.id.pop();
 
-            pass.code[instance.id] = pass.buffer.pop().join('');
+            pass.codeHead[instance.id] = pass.bufferHead.pop().join('');
+            pass.codeBody[instance.id] = pass.bufferBody.pop().join('');
         },
     };
 
