@@ -471,6 +471,47 @@ module.exports = (boot) => {
         )
     )
 
+    // __positive('val')
+    boot.namedModule(
+        '__positive', 'const', ast1.code(
+            ['val'], ['const'], '', ast1.meta(
+                (pass, instance) => {
+                    return ast2.nativeOut(
+                        {
+                            js: (pass, target) => {
+                                pass.write(target('+__self.get(\'val\')'));
+                            }
+                        },
+                        instance.accessOut('val')
+                    )
+                },
+                (pass, instance, type) => {
+                    throw Error();
+                }
+            )
+        )
+    )
+
+    // __negative('val')
+    boot.namedModule(
+        '__negative', 'const', ast1.code(
+            ['val'], ['const'], '', ast1.meta(
+                (pass, instance) => {
+                    return ast2.nativeOut(
+                        {
+                            js: (pass, target) => {
+                                pass.write(target('-__self.get(\'val\')'));
+                            }
+                        },
+                        instance.accessOut('val')
+                    )
+                },
+                (pass, instance, type) => {
+                    throw Error();
+                }
+            )
+        )
+    )
     // __array(...)
     boot.namedModule(
         '__array', 'const', ast1.code(
@@ -559,7 +600,10 @@ module.exports = (boot) => {
                         return ast2.nativeOut(
                             {
                                 js: (pass, target) => {
-                                    pass.write('if (__self.get("c")) {');
+                                    pass.writeRaw('    if (!__self.get("c")) {');
+                                    pass.writeRaw('        __self.__func = null;');
+                                    pass.writeRaw('        __self.__caller.__func();');
+                                    pass.writeRaw('    }');
                                 }
                             }
                         )
@@ -570,20 +614,6 @@ module.exports = (boot) => {
                 ),
                 // body()
                 ast1.call(ast1.lookup('body'), []),
-                ast1.meta(
-                    (pass, instance) => {
-                        return ast2.nativeOut(
-                            {
-                                js: (pass, target) => {
-                                    pass.write('}');
-                                }
-                            }
-                        )
-                    },
-                    (pass, instance, type) => {
-                        throw Error();
-                    }
-                ),
             ])
         )
     )
