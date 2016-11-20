@@ -4,7 +4,7 @@
 
 ## Welcome to Mendel!
 
-Mendel is a user friendly programming language. It has a clean design with modern programming principles. 
+Mendel is an user friendly programming language. It has a clean design with modern programming principles. 
 
 Although Mendel is developed based on JavaScript, Mendel is a static typed programming language.
 
