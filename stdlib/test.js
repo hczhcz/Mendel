@@ -1,71 +1,35 @@
 'use strict';
 
+const fs = require('fs');
+const process = require('process');
+const util = require('util');
+
+const parser = require('./parser.js');
 const lib = require('./lang.core');
-const ast1 = require('../libpepper/ast.1');
-const boot1 = require('../libpepper/boot.1');
-const boot2 = require('../libpepper/boot.2.js')
+const typeinfo = require('./libpepper/type.info');
+const type2c = require('./libpepper/type.2.c');
+const ast1 = require('./libpepper/ast.1');
+const ast2 = require('./libpepper/ast.2');
+const boot1 = require('./libpepper/boot.1');
+const boot2js = require('./libpepper/boot.2.js');
+const boot2c = require('./libpepper/boot.2.c');
 
-const codeAst1 = ast1.call(ast1.lookup('__do'), [
-    // var a = [1, 2, 3, 4]
-    ast1.call(ast1.lookup('__assign'), [
-        ast1.symbol('a', 'var'),
-        ast1.call(ast1.lookup('__array'), [
-            ast1.literal(1, 'int'),
-            ast1.literal(2, 'int'),
-            ast1.literal(3, 'int'),
-            ast1.literal(4, 'int')
-        ])
-    ]),
-    // a[0] = 10
-    ast1.call(ast1.lookup('__assign'), [
-        ast1.call(ast1.lookup('__index'), [
-            ast1.lookup('a'),
-            ast1.literal(0, 'int')
-        ]),
-        ast1.literal(10, 'int')
-    ]),
-    // // read(a)
-    // ast1.call(ast1.lookup('read'), [
-    //     ast1.lookup('a')
-    // ]),
-    // a = 10 + 20
-    // ast1.call(ast1.lookup('__assign'), [
-    //     ast1.lookup('a'),
-    //     ast1.call(ast1.lookup('__add'), [
-    //         ast1.literal(10, 'int'),
-    //         ast1.literal(20, 'int')
-    //     ])
-    // ]),
-    // write(a)
-    ast1.call(ast1.lookup('write'), [
-        ast1.lookup('a')
-    ])
-])
+const ast = parser.parse(process.argv[2]);
+console.log(util.inspect(ast, {showHidden: false, depth: null} ));
 
-const passBoot1 = boot1();
-const passBoot2 = boot2();
-lib(passBoot1);
+const b1 = boot1();
+const b2js = boot2js();
+const b2c = boot2c();
 
-try {
-    const head = '\'use strict\';\n'
-        + '\n'
-        + 'let __inner = null;\n'
-        + 'let __upper = null;\n'
-        + 'let __callee = null;\n'
-        + 'let __parent = null;\n'
-        + 'let __root = new Map();\n'
-        + 'let __self = __root;\n'
-        + '\n'
-        + '__root.set(\'__do\', __root);\n'
-        + '__root.set(\'__assign\', __root);\n'
-        + '__root.set(\'__write\', __root);\n'
-        + '\n';
+lib(b1);
 
-    const codeAst2 = passBoot1.module(codeAst1);
+const instance = b1.execModule(ast);
 
-    const module2 = passBoot2.module(codeAst2);
-
-    console.log(head + passBoot2.render() + module2);
-} catch (err) {
-    console.log(err.stack);
-}
+const m2js = b2js.collect(instance, b1.exports);
+fs.writeFile(
+    'test_gen.js',
+    b2js.render() + m2js,
+    (err) => {
+        //
+    }
+);
