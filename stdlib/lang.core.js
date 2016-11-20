@@ -191,9 +191,9 @@ module.exports = (boot) => {
         )
     )
 
-    //__multiple(const val1, const val2)
+    //__multiply(const val1, const val2)
     boot.namedModule(
-        '__multiple', 'const', ast1.code(
+        '__multiply', 'const', ast1.code(
             ['val1', 'val2'], ['const', 'const'], '', ast1.meta(
                 (pass, instance) => {
                     let type1 = instance.accessOut('val1');
