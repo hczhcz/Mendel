@@ -1,4 +1,4 @@
-![Mendel Logo](/mendel_logo.png)
+![Mendel Logo](/logo.png)
 
 
 # Mendel
