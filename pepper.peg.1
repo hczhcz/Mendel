@@ -1,0 +1,236 @@
+{
+const ast1 = require("./libpepper/ast.1");
+var a1;
+
+    var getFunc = (op) => {
+        let funcName;
+        switch (op) {
+            case "*": funcName="__multiple"; break;
+            case "/": funcName="__divide"; break;
+            case "%": funcName="__modulo"; break;
+
+            case "+": funcName="__add"; break;
+            case "-": funcName="__subtract"; break;
+
+            case "==": funcName="__equal"; break;
+            case "!=": funcName="__notEqual"; break;
+            case "<=": funcName="__lessEqual"; break;
+            case "<": funcName="__less"; break;
+            case ">=": funcName="__greater"; break;
+            case ">": funcName="__greaterEqual"; break;
+
+            case "&&": funcName="__and"; break;
+
+            case "||": funcName="__or"; break;
+
+            case "+": funcName="__positive"; break;
+            case "-": funcName="__negative"; break;
+            case "!": funcName="__not"; break;
+
+            default:
+                throw "Unknown op "+op;
+        }
+        return ast1.lookup(funcName);
+    }
+
+var evalBiExpr = (es) => {
+    if (!es) return null;
+    let e = es.shift();
+    while (es.length > 0) {
+        let op = es.shift();
+        let right = es.shift();
+        let f = getFunc(op);
+        e = ast1.call(f, [e, right]);
+    }
+    return e;
+}
+
+var evalUExpr = (op, e) => {
+    return ast1.call(getFunc(op), [e]);
+}
+}
+
+Grammar = _ s:Statement* _ {
+    let l = [];
+    s.forEach((s) => {
+        if (!s) {
+            l.push(s);
+        }
+    });
+    a1 = ast1.call(ast1.lookup("__do", l);
+}
+
+// Statement
+Statement = Comment _ {return null}
+          / s:(Return / Continue / Break) _ ";" _ {return s}
+          / s:(If / While / FuncDecl) _ {return s}
+          / s:(Declaration / SimpleStatement) _ ";" _ {return s}
+SimpleStatement = Assignment / ShortVarDecl / Expr
+
+// Block
+Block = "{" _ s:Statement* _ "}" {
+    let l = [];
+    s.forEach((s) => {
+        l.push(s);
+    });
+    return ast1.call(ast1.lookup("__do"), l);
+}
+
+// If
+If = "if" __ e:Expr _ b1:Block el:(_ "else" (__ i:If {return i}/ _ b:Block {return b}) )? {return {"if": {"cond":e, "block":b1, "else":el}}}
+
+// While
+While = "while" __ e:Expr _ b:Block {return {"while": {"cond":e, "block":b}}}
+
+// Func Declaration
+FuncDecl = "func" __ name:Ident _ func_in:paramlist _ func_out:resultList? _ b:Block {return {"func": {"name":name, "in":func_in, "out":func_out, "block":b}}}
+paramlist = "(" _ p:params? _ ")" {return p}
+params = p1:param pn:(_ "," _ p:param {return p})* _ ","? {return [p1].concat(pn)}
+param = n:paramName t:paramType? {
+    if (t === null) t = {multi:false, t:null}
+    t["name"]=n
+    return t
+}
+paramName = Ident
+paramType = multi:"..."? _ t:Type {
+    if (multi === "...") {
+        multi = true
+    } else {
+        multi = false
+    }
+    return {"multi": multi, "type":t}
+}
+resultList = "(" _ t1:Type tn:(_ "," _ t:Type {return t})* _ ","? _ ")" {return [t1].concat(tn)}
+
+// Declaration
+Declaration = mode:("var" / "const") __ il:identTypeList el:(_ "=" _ el:ExprList {return el})? {
+    return {"mode": mode, "var":il, "exp":el}
+}
+identTypeList = (id1:identTypeListIdentType idn:(_ "," _ id:identTypeListIdentType {return id})* {return [id1].concat(idn)})
+          / (id1:identTypeListIdent idn:(_ "," _ id:identTypeListIdent {return id})* {return [id1].concat(idn)})
+identTypeListIdent = id:Ident {return {"name":id}}
+identTypeListIdentType = id:Ident __ t:Type {return {"name":id, "type":t}}
+
+// Assignment
+Assignment = e1:ExprList _ "=" _ e2:ExprList {return {"assign":[e1, e2]}}
+
+// ShortVarDecl
+ShortVarDecl = i1:IdentList _ ":=" _ e2:ExprList {
+    let l = [];
+
+    for (var i = 0; i < i1.length; i++) {
+        if (!e2[i]) {
+            throw "ShortVarDecl expr list length"
+        }
+        l.push(
+            ast1.call(ast1.lookup("__assign", [
+                ast1.symbol(i1[i], "var"), e2[i],
+            ]))
+        );
+    }
+
+    return l;
+}
+
+// Return
+Return = "return" __ e:ExprList? {return {"return":e}}
+
+// Continue
+Continue = "continue" {return {"continue":null}}
+
+// Break
+Break = "break" {return {"break":null}}
+
+// Expr
+
+Expr = Expr1
+ExprList = e1:Expr en:(_ "," _ e:Expr {return e})* {return [e1].concat(en)}
+
+Expr1 = e1:Expr2 en:(_ op:biop_1 _ e:Expr2 {return [op, e]})* {return evalBiExpr([e1].concat(en))}
+Expr2 = e1:Expr3 en:(_ op:biop_2 _ e:Expr3 {return [op, e]})* {return evalBiExpr([e1].concat(en))}
+Expr3 = e1:Expr4 en:(_ op:biop_3 _ e:Expr4 {return [op, e]})* {return evalBiExpr([e1].concat(en))}
+Expr4 = e1:Expr5 en:(_ op:biop_4 _ e:Expr5 {return [op, e]})* {return evalBiExpr([e1].concat(en))}
+Expr5 = e1:Expr6 en:(_ op:biop_5 _ e:Expr6 {return [op, e]})* {return evalBiExpr([e1].concat(en))}
+Expr6 = "(" _ e:Expr _ ")" {return e} / UnaryExpr
+UnaryExpr = op:unary_op _ e:UnaryExpr {return evalUExpr([op, e])}
+          / PrimaryExpr
+
+biop_5 = "*" / "/" / "%"
+biop_4 = "+" / "-"
+biop_3 = "==" / "!=" / "<=" / "<" / ">=" / ">"
+biop_2 = "&&"
+biop_1 = "||"
+unary_op = "+" / "-" / "!"
+
+PrimaryExpr = e1:Operand en:(_ e:PrimaryExprTail {return e})* {
+    let es = [e1].concat(en);
+    return e1;
+}
+Operand = Literal / Ident / "(" _ e:Expr _ ")" {return e}
+PrimaryExprTail = Selector / Index / Argument
+Selector = "." id:Ident {return {"select":id}}
+Index = "[" e:Expr "]" {return {"index":e}}
+Argument = "(" _ arg:(ExprList)? _ ","? _ ")" {return {"arg":arg}}
+
+// IdentList
+IdentList = id1:Ident idn:(_ "," _ id:Ident {return id})* {return [id1].concat(idn)}
+
+// Type
+Type = TypeArray / TypeFunc / Ident
+
+// Type Array
+TypeArray = "array" _ "<" _ t:Type _ ">" {return "array of "+t}
+
+// Type Func
+TypeFunc = "func" _ func_in:paramlist _ func_out:resultList? {return {"in":func_in, "out":func_out}}
+
+// Literal
+Literal = BasicLiteral / CompLiteral
+
+BasicLiteral = Float / Int / String / Char
+
+CompLiteral = t:CompLiteralType _ v:CompLiteralValue {return {"type":t, "value":v}}
+CompLiteralType = TypeArray / TypeFunc
+CompLiteralValue = "{" v:(_ el:elementList _ ","? {return el})? "}" {return v}
+elementList = e1:element en:(_ "," _ e:element {return e})* {return [e1].concat(en)}
+element = Expr / CompLiteralValue
+
+// Lex
+
+Comment = "//" char* newline {return}
+
+Ident = head:(letter/"_") tail:(letter/digit/"_")* {return head+tail.join("")}
+
+Int = digit+ {return ast1.literal(parseInt(text(), 10), 'int')}
+
+Float = (digit+ "." digit* exponent?
+        / digit+ exponent
+        / "." digit+ exponent?)  {return ast1.literal(parseFloat(text(), 10), 'float')}
+exponent = ("e" / "E") ("+" / "-")? digit+
+
+String = "`" cs:rawString         "`" {return ast1.literal(cs.join(""), "string")}
+       / '"' cs:interpretedString '"' {return ast1.literal(cs.join(""), "string")}
+rawString = (!"`" c:(char / newline) {return c})*
+interpretedString = (escape_char / (!'"' c:char {return c}))*
+
+Char = "'" c:(escape_char / char) "'" {return ast1.literal(c, "string")}
+
+_ = space* {return}
+__ = space+ {return}
+space = " " / "\t" / newline
+newline = "\n" / "\r"
+char = !newline c:. {return c}
+letter = [a-zA-Z]
+digit = [0-9]
+escape_char = "\\" c:char {
+    switch (c) {
+        case "a": return "\a";
+        case "b": return "\b";
+        case "f": return "\f";
+        case "n": return "\n";
+        case "r": return "\r";
+        case "t": return "\t";
+        case "v": return "\v";
+        default: return c;
+    }
+}
