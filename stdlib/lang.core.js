@@ -151,6 +151,126 @@ module.exports = (boot) => {
         )
     )
 
+    //__subtract(const val1, const val2)
+    boot.namedModule(
+        '__subtract', 'const', ast1.code(
+            ['val1', 'val2'], ['const', 'const'], '', ast1.meta(
+                (pass, instance) => {
+                    let type1 = instance.accessOut('val1');
+                    let type2 = instance.accessOut('val2');
+                    if (typeCheck.visit(type1, type2) &&
+                        typeCheck.visit(type1, typeInfo.basic('int'))) {
+                        return ast2.nativeOut(
+                            {
+                                js: (pass, target) => {
+                                    pass.write(target('__self.get(\'val1\') - __self.get(\'val2\')'));
+                                }
+                            },
+                            typeInfo.basic('int')
+                        )
+                    }
+                    else if (typeCheck.visit(type1, type2) &&
+                             typeCheck.visit(type1, typeInfo.basic('float'))) {
+                        return ast2.nativeOut(
+                            {
+                                js: (pass, target) => {
+                                    pass.write(target('__self.get(\'val1\') - __self.get(\'val2\')'));
+                                }
+                            },
+                            typeInfo.basic('float')
+                        )
+                    }
+                    else {
+                        throw Error();
+                    }
+                },
+                (pass, instance, type) => {
+                    throw Error();
+                }
+            )
+        )
+    )
+
+    //__mutiple(const val1, const val2)
+    boot.namedModule(
+        '__mutiple', 'const', ast1.code(
+            ['val1', 'val2'], ['const', 'const'], '', ast1.meta(
+                (pass, instance) => {
+                    let type1 = instance.accessOut('val1');
+                    let type2 = instance.accessOut('val2');
+                    if (typeCheck.visit(type1, type2) &&
+                        typeCheck.visit(type1, typeInfo.basic('int'))) {
+                        return ast2.nativeOut(
+                            {
+                                js: (pass, target) => {
+                                    pass.write(target('__self.get(\'val1\') * __self.get(\'val2\')'));
+                                }
+                            },
+                            typeInfo.basic('int')
+                        )
+                    }
+                    else if (typeCheck.visit(type1, type2) &&
+                             typeCheck.visit(type1, typeInfo.basic('float'))) {
+                        return ast2.nativeOut(
+                            {
+                                js: (pass, target) => {
+                                    pass.write(target('__self.get(\'val1\') * __self.get(\'val2\')'));
+                                }
+                            },
+                            typeInfo.basic('float')
+                        )
+                    }
+                    else {
+                        throw Error();
+                    }
+                },
+                (pass, instance, type) => {
+                    throw Error();
+                }
+            )
+        )
+    )
+
+    //__divide(const val1, const val2)
+    boot.namedModule(
+        '__divide', 'const', ast1.code(
+            ['val1', 'val2'], ['const', 'const'], '', ast1.meta(
+                (pass, instance) => {
+                    let type1 = instance.accessOut('val1');
+                    let type2 = instance.accessOut('val2');
+                    if (typeCheck.visit(type1, type2) &&
+                        typeCheck.visit(type1, typeInfo.basic('int'))) {
+                        return ast2.nativeOut(
+                            {
+                                js: (pass, target) => {
+                                    pass.write(target('__self.get(\'val1\') / __self.get(\'val2\')'));
+                                }
+                            },
+                            typeInfo.basic('int')
+                        )
+                    }
+                    else if (typeCheck.visit(type1, type2) &&
+                             typeCheck.visit(type1, typeInfo.basic('float'))) {
+                        return ast2.nativeOut(
+                            {
+                                js: (pass, target) => {
+                                    pass.write(target('__self.get(\'val1\') / __self.get(\'val2\')'));
+                                }
+                            },
+                            typeInfo.basic('float')
+                        )
+                    }
+                    else {
+                        throw Error();
+                    }
+                },
+                (pass, instance, type) => {
+                    throw Error();
+                }
+            )
+        )
+    )
+
     // __array(...)
     boot.namedModule(
         '__array', 'const', ast1.code(
