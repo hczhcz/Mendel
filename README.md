@@ -1,3 +1,6 @@
+![Mendel Logo](/mendel_logo.png)
+
+
 # Mendel
 
 Yet Another Programming Language Implementation
