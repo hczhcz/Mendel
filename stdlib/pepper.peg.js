@@ -4151,7 +4151,7 @@ function peg$parse(input, options) {
   var getFunc = (op) => {
       let funcName;
       switch (op) {
-          case "*": funcName="__multiple"; break;
+          case "*": funcName="__multiply"; break;
           case "/": funcName="__divide"; break;
           case "%": funcName="__modulo"; break;
 
