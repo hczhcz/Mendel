@@ -1,4 +1,4 @@
-![Mendel Logo](logo.png)
+![Mendel Logo](mendel_logo_small.png)
 
 # Mendel Programming Language
 
