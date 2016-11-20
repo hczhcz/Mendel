@@ -271,6 +271,126 @@ module.exports = (boot) => {
         )
     )
 
+    // __less('val1', 'val2')
+    boot.namedModule(
+        '__less', 'const', ast1.code(
+            ['val1', 'val2'], ['const', 'const'], '', ast1.meta(
+                (pass, instance) => {
+                    let type1 = instance.accessOut('val1');
+                    let type2 = instance.accessOut('val2');
+                    if (typeCheck.visit(type1, type2) &&
+                        typeCheck.visit(type1, typeInfo.basic('int'))) {
+                        return ast2.nativeOut(
+                            {
+                                js: (pass, target) => {
+                                    pass.write(target('__self.get(\'val1\') < __self.get(\'val2\')'));
+                                }
+                            },
+                            typeInfo.basic('boolean')
+                        )
+                    }
+                    else if (typeCheck.visit(type1, type2) &&
+                             typeCheck.visit(type1, typeInfo.basic('float'))) {
+                        return ast2.nativeOut(
+                            {
+                                js: (pass, target) => {
+                                    pass.write(target('__self.get(\'val1\') < __self.get(\'val2\')'));
+                                }
+                            },
+                            typeInfo.basic('boolean')
+                        )
+                    }
+                    else {
+                        throw Error();
+                    }
+                },
+                (pass, instance, type) => {
+                    throw Error();
+                }
+            )
+        )
+    )
+
+    // __greater('val1', 'val2')
+    boot.namedModule(
+        '__greater', 'const', ast1.code(
+            ['val1', 'val2'], ['const', 'const'], '', ast1.meta(
+                (pass, instance) => {
+                    let type1 = instance.accessOut('val1');
+                    let type2 = instance.accessOut('val2');
+                    if (typeCheck.visit(type1, type2) &&
+                        typeCheck.visit(type1, typeInfo.basic('int'))) {
+                        return ast2.nativeOut(
+                            {
+                                js: (pass, target) => {
+                                    pass.write(target('__self.get(\'val1\') > __self.get(\'val2\')'));
+                                }
+                            },
+                            typeInfo.basic('boolean')
+                        )
+                    }
+                    else if (typeCheck.visit(type1, type2) &&
+                             typeCheck.visit(type1, typeInfo.basic('float'))) {
+                        return ast2.nativeOut(
+                            {
+                                js: (pass, target) => {
+                                    pass.write(target('__self.get(\'val1\') > __self.get(\'val2\')'));
+                                }
+                            },
+                            typeInfo.basic('boolean')
+                        )
+                    }
+                    else {
+                        throw Error();
+                    }
+                },
+                (pass, instance, type) => {
+                    throw Error();
+                }
+            )
+        )
+    )
+
+    // __equal('val1', 'val2')
+    boot.namedModule(
+        '__equal', 'const', ast1.code(
+            ['val1', 'val2'], ['const', 'const'], '', ast1.meta(
+                (pass, instance) => {
+                    let type1 = instance.accessOut('val1');
+                    let type2 = instance.accessOut('val2');
+                    if (typeCheck.visit(type1, type2) &&
+                        typeCheck.visit(type1, typeInfo.basic('int'))) {
+                        return ast2.nativeOut(
+                            {
+                                js: (pass, target) => {
+                                    pass.write(target('__self.get(\'val1\') === __self.get(\'val2\')'));
+                                }
+                            },
+                            typeInfo.basic('boolean')
+                        )
+                    }
+                    else if (typeCheck.visit(type1, type2) &&
+                             typeCheck.visit(type1, typeInfo.basic('float'))) {
+                        return ast2.nativeOut(
+                            {
+                                js: (pass, target) => {
+                                    pass.write(target('__self.get(\'val1\') === __self.get(\'val2\')'));
+                                }
+                            },
+                            typeInfo.basic('boolean')
+                        )
+                    }
+                    else {
+                        throw Error();
+                    }
+                },
+                (pass, instance, type) => {
+                    throw Error();
+                }
+            )
+        )
+    )
+
     // __array(...)
     boot.namedModule(
         '__array', 'const', ast1.code(
@@ -287,7 +407,8 @@ module.exports = (boot) => {
                                 pass.write(target(output));
                             }
                         },
-                        typeInfo.array(typeInfo.basic('int'))
+                        // typeInfo.array(typeInfo.basic('int'))
+                        typeInfo.array(instance.accessOut('__argument_0'))
                     )
                 },
                 (pass, instance, type) => {
@@ -302,8 +423,8 @@ module.exports = (boot) => {
         '__index', 'const', ast1.code(
             ['container', 'index'], ['const', 'const'], '', ast1.meta(
                 (pass, instance) => {
-                    if (typeCheck.visit(instance.accessOut('container'),
-                        typeInfo.array(typeInfo.basic('int')))) {
+                    if (instance.accessOut('container').__type === 'array'
+                        ) {
                             return ast2.nativeOut(
                                 {
                                     js: (pass, target) => {
@@ -321,8 +442,7 @@ module.exports = (boot) => {
                     }
                 },
                 (pass, instance, type) => {
-                    if (typeCheck.visit(instance.accessOut('container'),
-                        typeInfo.array(typeInfo.basic('int')))
+                    if (instance.accessOut('container').__type === 'array'
                         && typeCheck.visit(instance.accessOut('container').type, type)) {
                             return ast2.nativeIn(
                                 {
