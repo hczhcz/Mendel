@@ -28,7 +28,7 @@
 - __assign(var val1, const val2)
 - __add(const val1, const val2)
 - __subtract(const val1, const val2)
-- __mutiple(const val1, const val2)
+- __multiply(const val1, const val2)
 - __divide(const val1, const val2)
 - __mod(const val1, const val2)
 - __lessThan(const val1, const val2)
