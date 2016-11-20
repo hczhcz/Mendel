@@ -8,11 +8,15 @@ Mendel is an user friendly programming language. It has a clean design with mode
 
 Mendel is a static typed programming language although it was developed based on JavaScript. Mendel is also friendly to JavaScript and C.
 
+Get to know about the Mendel by visiting our [presentation](http://go.osu.edu/intro2mendel).
+
 ## Getting  Started
 
 ### System Requirements
 
 Currently, the Mendel is complied using node.js. Node.js can be downloaded on [Node.js](https://nodejs.org).
+
+PEG.js
 
 For Windows user, it might be helpful to have an terminal like [PuTTy](http://www.putty.org/) on your computer.
 
@@ -21,7 +25,7 @@ For Windows user, it might be helpful to have an terminal like [PuTTy](http://ww
 To download the sources for the Mendel, open a terminal and  type in following command.
 
 ```bash
-$ git clone <url>
+$ git clone https://github.com/hczhcz/mendel-lang.git
 ```
 
 ## Testing
@@ -60,7 +64,7 @@ Contributing to the Mendel is always welcome.
 
 Please make sure your code is passed before  you submit a pull request.
 
-If you have any question, fell free to contact the Mendel development group.
+If you have any question, feel free to contact the Mendel development group.
 
 ## License
 
