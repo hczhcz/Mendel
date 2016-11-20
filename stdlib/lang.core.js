@@ -534,6 +534,34 @@ module.exports = (boot) => {
         )
     )
 
+    // __int('val')
+    boot.namedModule(
+        '__int', 'const', ast1.code(
+            ['val'], ['const'], '', ast1.meta(
+                (pass, instance) => {
+                    if (typeCheck.visit(instance.accessOut('val'),
+                        typeInfo.basic('float'))) {
+                            return ast2.nativeOut(
+                                {
+                                    js: (pass, target) => {
+                                        pass.write("let str = __self.get(\'val\').toString()");
+                                        pass.write(target("parseInt(str.substr(0, str.indexOf('.')))"));
+                                    }
+                                },
+                                typeInfo.basic('int')
+                            )
+                        }
+                    else {
+                        throw Error();
+                    }
+                },
+                (pass, instance, type) => {
+                    throw Error();
+                }
+            )
+        )
+    );
+
     // __array(...)
     boot.namedModule(
         '__array', 'const', ast1.code(
